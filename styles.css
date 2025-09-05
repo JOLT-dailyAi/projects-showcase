@@ -33,7 +33,7 @@
   --ig-transition: all 0.2s ease-in-out;
   --ig-transition-slow: all 0.3s ease-in-out;
   
-  /* BorderËŠRadius */
+  /* Border Radius */
   --ig-radius-sm: 4px;
   --ig-radius-md: 8px;
   --ig-radius-lg: 12px;
@@ -405,7 +405,20 @@ p {
   100% { left: 100%; }
 }
 
-/* ===== PORTFOLIO LANDING PAGE STYLES ===== */
+/* Title Text with Gradient */
+.title-text {
+  background: var(--ig-gradient-brand);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Emoji Styling */
+.emoji {
+  background: none;
+  -webkit-text-fill-color: initial;
+  text-shadow: none;
+}
 
 /* Hero Section for Portfolio */
 .hero-section {
@@ -448,19 +461,6 @@ p {
   gap: var(--ig-space-xs);
   margin-bottom: var(--ig-space-md);
   text-shadow: 0 0 30px rgba(0, 149, 246, 0.5);
-}
-
-.hero-title .emoji {
-  background: none;
-  -webkit-text-fill-color: initial;
-  text-shadow: none;
-}
-
-.hero-title .title-text {
-  background: var(--ig-gradient-brand);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
 }
 
 .hero-subtitle {
@@ -522,8 +522,11 @@ p {
 .project-title {
   font-size: 24px;
   font-weight: 700;
-  color: var(--ig-text-primary);
   margin-bottom: var(--ig-space-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ig-space-xs);
 }
 
 .project-description {
@@ -619,8 +622,11 @@ p {
 .contact-title {
   font-size: 28px;
   font-weight: 700;
-  color: var(--ig-text-primary);
   margin-bottom: var(--ig-space-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ig-space-xs);
 }
 
 .contact-description {
@@ -638,7 +644,7 @@ p {
   margin-top: var(--ig-space-2xl);
 }
 
-/* ===== CAPTION ANALYZER SPECIFIC STYLES ===== */
+/* Caption Analyzer Specific Styles */
 .analyzer-container {
   max-width: 800px;
   margin: 0 auto;
@@ -761,23 +767,10 @@ p {
   font-size: clamp(24px, 5vw, 32px);
   font-weight: 700;
   margin-bottom: var(--ig-space-sm);
-  color: var(--ig-text-primary);
-  text-shadow: 0 0 20px rgba(0, 149, 246, 0.3);
   display: flex;
   align-items: center;
   justify-content: center;
   gap: var(--ig-space-xs);
-}
-
-.header-title .emoji {
-  background: none;
-  -webkit-text-fill-color: initial;
-  text-shadow: none;
-}
-
-.header-title .title-text {
-  color: var(--ig-text-primary);
-  text-shadow: 0 0 20px rgba(0, 149, 246, 0.3);
 }
 
 .header-subtitle {
@@ -844,7 +837,7 @@ p {
 }
 
 .progress-fill {
-  height: 100\%\;
+  height: 100%;
   background: linear-gradient(90deg, var(--ig-blue), #06b6d4);
   transition: all 0.3s ease;
   border-radius: var(--ig-radius-full);
