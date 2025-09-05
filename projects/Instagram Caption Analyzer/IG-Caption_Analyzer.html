@@ -17,7 +17,8 @@
         <!-- Header -->
         <div class="header-section">
             <h1 class="header-title">
-                <span class="emoji-icon">📱</span>Instagram Caption Analyzer
+                <span class="emoji">📱</span>
+                <span class="title-text">Instagram Caption Analyzer</span>
             </h1>
             <p class="header-subtitle">Optimize your captions for maximum engagement</p>
         </div>
@@ -65,7 +66,7 @@
             const limit = 2200;
             
             // Update character count
-            document.getElementById('charCount').textContent = charCount;
+            document.getElementById('charCount'). entities = charCount;
             
             // Calculate progress percentage
             const percentage = Math.min((charCount / limit) * 100, 100);
@@ -91,7 +92,7 @@
             } else if (charCount <= 1000) {
                 // Still good but getting longer
                 statusEl.textContent = '📖 Story Mode';
-                statusEl.className = 'status-badge status-warning';
+                statusEl.className = 'status-badge status-parser';
                 progressBar.className = 'progress-fill warning';
             } else if (charCount <= 2200) {
                 // Getting close to limit
