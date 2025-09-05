@@ -33,7 +33,7 @@
   --ig-transition: all 0.2s ease-in-out;
   --ig-transition-slow: all 0.3s ease-in-out;
   
-  /* Border Radius */
+  /* BorderËŠRadius */
   --ig-radius-sm: 4px;
   --ig-radius-md: 8px;
   --ig-radius-lg: 12px;
@@ -763,13 +763,21 @@ p {
   margin-bottom: var(--ig-space-sm);
   color: var(--ig-text-primary);
   text-shadow: 0 0 20px rgba(0, 149, 246, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ig-space-xs);
 }
 
-.emoji-icon {
-  display: inline-block;
-  font-size: 1.2em;
-  margin-right: 0.3em;
-  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.3));
+.header-title .emoji {
+  background: none;
+  -webkit-text-fill-color: initial;
+  text-shadow: none;
+}
+
+.header-title .title-text {
+  color: var(--ig-text-primary);
+  text-shadow: 0 0 20px rgba(0, 149, 246, 0.3);
 }
 
 .header-subtitle {
@@ -836,7 +844,7 @@ p {
 }
 
 .progress-fill {
-  height: 100%;
+  height: 100\%\;
   background: linear-gradient(90deg, var(--ig-blue), #06b6d4);
   transition: all 0.3s ease;
   border-radius: var(--ig-radius-full);
