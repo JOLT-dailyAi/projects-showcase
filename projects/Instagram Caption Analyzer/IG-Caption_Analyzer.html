@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram Caption Analyzer</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Additional styles specific to the analyzer */
+        .analyzer-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: var(--ig-space-lg);
+        }
+        
+        .counter-display {
+            background: var(--ig-surface-elevated);
+            border: 1px solid var(--ig-border);
+            border-radius: var(--ig-radius-lg);
+            padding: var(--ig-space-lg);
+            margin-bottom: var(--ig-space-lg);
+            box-shadow: var(--ig-shadow-md);
+        }
+        
+        .count-number {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--ig-text-primary);
+        }
+        
+        .count-limit {
+            color: var(--ig-text-secondary);
+            font-size: 16px;
+            margin-left: var(--ig-space-xs);
+        }
+        
+        .caption-textarea {
+            width: 100%;
+            min-height: 320px;
+            padding: var(--ig-space-lg);
+            background: var(--ig-surface);
+            border: 2px solid var(--ig-border);
+            border-radius: var(--ig-radius-lg);
+            color: var(--ig-text-primary);
+            font-family: inherit;
+            font-size: 16px;
+            line-height: 1.6;
+            resize: vertical;
+            transition: var(--ig-transition);
+            box-sizing: border-box;
+        }
+        
+        .caption-textarea:focus {
+            outline: none;
+            border-color: var(--ig-blue);
+            box-shadow: 0 0 0 3px rgba(0, 149, 246, 0.1);
+        }
+        
+        .caption-textarea::placeholder {
+            color: var(--ig-text-muted);
+            font-style: italic;
+        }
+        
+        .analysis-card {
+            background: var(--ig-surface-elevated);
+            border: 1px solid var(--ig-border);
+            border-radius: var(--ig-radius-lg);
+            padding: var(--ig-space-lg);
+            margin-top: var(--ig-space-lg);
+            box-shadow: var(--ig-shadow-sm);
+        }
+        
+        .analysis-title {
+            color: var(--ig-blue);
+            margin-bottom: var(--ig-space-md);
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .stat-item {
+            margin-bottom: var(--ig-space-sm);
+            padding: var(--ig-space-sm);
+            background: var(--ig-surface);
+            border-radius: var(--ig-radius-sm);
+            border-left: 3px solid var(--ig-blue);
+        }
+        
+        .stat-label {
+            font-weight: 600;
+            color: var(--ig-text-primary);
+        }
+        
+        .stat-value {
+            color: var(--ig-text-secondary);
+            margin-left: var(--ig-space-xs);
+        }
+        
+        .tip-box {
+            padding: var(--ig-space-md);
+            margin-top: var(--ig-space-md);
+            border-radius: var(--ig-radius-md);
+            border-left: 4px solid;
+        }
+        
+        .tip-error {
+            background: rgba(237, 73, 86, 0.1);
+            border-left-color: var(--ig-red);
+            color: var(--ig-red);
+        }
+        
+        .tip-warning {
+            background: rgba(255, 205, 60, 0.1);
+            border-left-color: var(--ig-yellow);
+            color: var(--ig-yellow);
+        }
+        
+        .tip-info {
+            background: rgba(0, 149, 246, 0.1);
+            border-left-color: var(--ig-blue);
+            color: var(--ig-blue);
+        }
+        
+        .header-section {
+            text-align: center;
+            margin-bottom: var(--ig-space-2xl);
+        }
+        
+        .header-title {
+            font-size: clamp(24px, 5vw, 32px);
+            font-weight: 700;
+            margin-bottom: var(--ig-space-sm);
+            color: var(--ig-text-primary);
+            text-shadow: 0 0 20px rgba(0, 149, 246, 0.3);
+        }
+        
+        .emoji-icon {
+            display: inline-block;
+            font-size: 1.2em;
+            margin-right: 0.3em;
+            filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.3));
+        }
+        
+        .header-subtitle {
+            color: var(--ig-text-secondary);
+            font-size: 16px;
+        }
+        
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--ig-space-xs);
+            color: var(--ig-text-primary);
+            text-decoration: none;
+            margin-bottom: var(--ig-space-lg);
+            padding: var(--ig-space-sm) var(--ig-space-lg);
+            border-radius: var(--ig-radius-xl);
+            transition: var(--ig-transition);
+            background: var(--ig-gradient-brand);
+            font-weight: 600;
+            box-shadow: var(--ig-shadow-md);
+        }
+        
+        .back-link:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--ig-shadow-lg);
+        }
+        
+        /* Modern status badge */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--ig-space-xs);
+            padding: var(--ig-space-sm) var(--ig-space-md);
+            border-radius: var(--ig-radius-xl);
+            font-weight: 600;
+            font-size: 14px;
+            box-shadow: var(--ig-shadow-sm);
+            transition: var(--ig-transition);
+        }
+        
+        .status-success {
+            background: linear-gradient(135deg, var(--ig-green), #2dd4bf);
+            color: white;
+        }
+        
+        .status-warning {
+            background: linear-gradient(135deg, var(--ig-yellow), #f59e0b);
+            color: white;
+        }
+        
+        .status-danger {
+            background: linear-gradient(135deg, var(--ig-red), #dc2626);
+            color: white;
+        }
+        
+        /* Progress bar for character count */
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: var(--ig-border);
+            border-radius: var(--ig-radius-full);
+            overflow: hidden;
+            margin-top: var(--ig-space-sm);
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--ig-blue), #06b6d4);
+            transition: all 0.3s ease;
+            border-radius: var(--ig-radius-full);
+        }
+        
+        .progress-fill.warning {
+            background: linear-gradient(90deg, var(--ig-yellow), #f59e0b);
+        }
+        
+        .progress-fill.danger {
+            background: linear-gradient(90deg, var(--ig-red), #dc2626);
+        }
+        
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .analyzer-container {
+                padding: var(--ig-space-md);
+            }
+            
+            .counter-display {
+                padding: var(--ig-space-md);
+            }
+            
+            .caption-textarea {
+                min-height: 280px;
+                font-size: 16px; /* Prevents zoom on iOS */
+                padding: var(--ig-space-md);
+            }
+            
+            .count-number {
+                font-size: 28px;
+            }
+            
+            .ig-flex {
+                flex-direction: column;
+                gap: var(--ig-space-sm);
+                align-items: flex-start !important;
+            }
+            
+            .status-badge {
+                align-self: flex-end;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header-title {
+                font-size: 24px;
+            }
+            
+            .analyzer-container {
+                padding: var(--ig-space-sm);
+            }
+            
+            .counter-display,
+            .analysis-card {
+                padding: var(--ig-space-md);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="analyzer-container">
+        <!-- Back Navigation -->
+        <a href="index.html" class="back-link">
+            ← See Other Projects
+        </a>
+        
+        <!-- Header -->
+        <div class="header-section">
+            <h1 class="header-title">
+                <span class="emoji-icon">📱</span>Instagram Caption Analyzer
+            </h1>
+            <p class="header-subtitle">Optimize your captions for maximum engagement</p>
+        </div>
+        
+        <!-- Character Counter Display -->
+        <div class="ig-card counter-display">
+            <div class="ig-flex ig-justify-between ig-items-center ig-mb-sm">
+                <div>
+                    <span class="count-number" id="charCount">0</span>
+                    <span class="count-limit">/ 2,200 characters</span>
+                </div>
+                <div class="status-badge status-success" id="status">✅ Perfect Length</div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            </div>
+        </div>
+        
+        <!-- Caption Input -->
+        <div class="ig-card">
+            <textarea 
+                id="captionText" 
+                class="caption-textarea"
+                placeholder="✨ Paste your Instagram caption here and watch the magic happen..."
+                oninput="analyzeCaption()"
+            ></textarea>
+        </div>
+        
+        <!-- Analysis Results -->
+        <div class="ig-card analysis-card" id="analysis">
+            <h3 class="analysis-title">📊 Caption Analysis</h3>
+            <div id="analysisContent">
+                <div class="stat-item">
+                    <span class="stat-label">Status:</span>
+                    <span class="stat-value">Waiting for input...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function analyzeCaption() {
+            const text = document.getElementById('captionText').value;
+            const charCount = text.length;
+            const limit = 2200;
+            
+            // Update character count
+            document.getElementById('charCount').textContent = charCount;
+            
+            // Calculate progress percentage
+            const percentage = Math.min((charCount / limit) * 100, 100);
+            const progressBar = document.getElementById('progressBar');
+            progressBar.style.width = percentage + '%';
+            
+            // Update status with modern styling - based on current IG best practices
+            const statusEl = document.getElementById('status');
+            if (charCount === 0) {
+                statusEl.textContent = '✨ Ready to Analyze';
+                statusEl.className = 'status-badge status-success';
+                progressBar.className = 'progress-fill';
+            } else if (charCount <= 125) {
+                // Instagram mobile shows full caption without "more" button
+                statusEl.textContent = '📱 Mobile Perfect';
+                statusEl.className = 'status-badge status-success';
+                progressBar.className = 'progress-fill';
+            } else if (charCount <= 300) {
+                // Good engagement range
+                statusEl.textContent = '👍 Great Length';
+                statusEl.className = 'status-badge status-success';
+                progressBar.className = 'progress-fill';
+            } else if (charCount <= 1000) {
+                // Still good but getting longer
+                statusEl.textContent = '📖 Story Mode';
+                statusEl.className = 'status-badge status-warning';
+                progressBar.className = 'progress-fill warning';
+            } else if (charCount <= 2200) {
+                // Getting close to limit
+                statusEl.textContent = '⚠️ Near Limit';
+                statusEl.className = 'status-badge status-warning';
+                progressBar.className = 'progress-fill warning';
+            } else {
+                // Over Instagram's limit
+                statusEl.textContent = '❌ Too Long';
+                statusEl.className = 'status-badge status-danger';
+                progressBar.className = 'progress-fill danger';
+            }
+            
+            // Count hashtags (more accurate regex)
+            const hashtags = text.match(/#[a-zA-Z0-9_]+/g) || [];
+            const hashtagCount = hashtags.length;
+            
+            // Count mentions
+            const mentions = text.match(/@[a-zA-Z0-9_.]+/g) || [];
+            const mentionCount = mentions.length;
+            
+            // Count emojis (comprehensive emoji detection)
+            const emojiCount = (text.match(/[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]|[\u{1F900}-\u{1F9FF}]|[\u{1FA70}-\u{1FAFF}]/gu) || []).length;
+            
+            // Count words and lines
+            const wordCount = text.trim() ? text.trim().split(/\s+/).length : 0;
+            const lineCount = text.split('\n').length;
+            
+            // Build analysis
+            let analysis = `
+                <div class="stat-item">
+                    <span class="stat-label">📝 Words:</span>
+                    <span class="stat-value">${wordCount}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">📄 Lines:</span>
+                    <span class="stat-value">${lineCount}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">#️⃣ Hashtags:</span>
+                    <span class="stat-value">${hashtagCount}/30 max</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">👤 Mentions:</span>
+                    <span class="stat-value">${mentionCount}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">😀 Emojis:</span>
+                    <span class="stat-value">${emojiCount}</span>
+                </div>
+            `;
+            
+            // Add tips and warnings based on current Instagram best practices
+            if (charCount === 0) {
+                analysis += `
+                    <div class="tip-box tip-info">
+                        <strong>💡 Pro Tip:</strong> Start typing to see real-time analysis of your caption!
+                    </div>
+                `;
+            } else {
+                if (charCount > 2200) {
+                    const overBy = charCount - 2200;
+                    analysis += `
+                        <div class="tip-box tip-error">
+                            <strong>⚠️ Over Limit:</strong> Your caption is ${overBy} characters too long. Instagram will truncate it!
+                        </div>
+                    `;
+                }
+                
+                // Updated hashtag recommendations based on 2024 best practices
+                if (hashtagCount > 30) {
+                    analysis += `
+                        <div class="tip-box tip-error">
+                            <strong>🚫 Too Many Hashtags:</strong> Instagram allows maximum 30 hashtags. You have ${hashtagCount}.
+                        </div>
+                    `;
+                } else if (hashtagCount > 10) {
+                    analysis += `
+                        <div class="tip-box tip-warning">
+                            <strong>📊 Hashtag Tip:</strong> Consider 3-7 targeted hashtags for better engagement than ${hashtagCount}.
+                        </div>
+                    `;
+                } else if (hashtagCount >= 3 && hashtagCount <= 7) {
+                    analysis += `
+                        <div class="tip-box tip-info">
+                            <strong>🎯 Perfect Hashtags:</strong> ${hashtagCount} hashtags is in the sweet spot for 2024!
+                        </div>
+                    `;
+                }
+                
+                // Mobile optimization tip
+                if (charCount <= 125) {
+                    analysis += `
+                        <div class="tip-box tip-info">
+                            <strong>📱 Mobile Perfect:</strong> Your caption displays fully on mobile without "more" button!
+                        </div>
+                    `;
+                }
+                
+                // Engagement optimization tips
+                if (text.includes('?')) {
+                    analysis += `
+                        <div class="tip-box tip-info">
+                            <strong>💬 Great for Engagement:</strong> Questions encourage comments!
+                        </div>
+                    `;
+                }
+                
+                // Story-style caption detection
+                if (charCount > 500 && lineCount > 5) {
+                    analysis += `
+                        <div class="tip-box tip-info">
+                            <strong>📚 Story Mode:</strong> Long-form content can work great for engaged audiences!
+                        </div>
+                    `;
+                }
+            }
+            
+            document.getElementById('analysisContent').innerHTML = analysis;
+        }
+        
+        // Initialize analysis
+        analyzeCaption();
+        
+        // Auto-expand textarea - dynamic sizing
+        const textarea = document.getElementById('captionText');
+        textarea.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.max(320, this.scrollHeight) + 'px';
+        });
+        
+        // Prevent zoom on iOS when focusing input
+        if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+            textarea.addEventListener('focus', function() {
+                document.querySelector('meta[name=viewport]').setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+            });
+            
+            textarea.addEventListener('blur', function() {
+                document.querySelector('meta[name=viewport]').setAttribute('content', 'width=device-width, initial-scale=1.0');
+            });
+        }
+    </script>
+</body>
+</html>
