@@ -22,6 +22,7 @@
   /* Gradients */
   --ig-gradient-brand: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
   --ig-gradient-story: linear-gradient(45deg, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+  --ig-gradient-tech: linear-gradient(135deg, var(--ig-blue), var(--ig-purple));
   
   /* Shadows */
   --ig-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
@@ -538,18 +539,27 @@ p {
 .project-tech {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--ig-space-xs);
+  gap: var(--ig-space-sm);
   margin-bottom: var(--ig-space-lg);
 }
 
 .tech-tag {
-  background: var(--ig-surface-hover);
-  color: var(--ig-blue);
-  padding: var(--ig-space-xs) var(--ig-space-sm);
-  border-radius: var(--ig-radius-full);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--ig-space-sm) var(--ig-space-md);
+  background: var(--ig-gradient-tech);
+  color: white;
   font-size: 12px;
   font-weight: 600;
-  border: 1px solid var(--ig-border-light);
+  border-radius: var(--ig-radius-lg);
+  box-shadow: var(--ig-shadow-sm);
+  transition: var(--ig-transition);
+}
+
+.tech-tag:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--ig-shadow-md);
 }
 
 /* Stats Section */
