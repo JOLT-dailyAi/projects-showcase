@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instagram Caption Analyzer</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Additional styles specific to the analyzer */
+        .analyzer-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: var(--ig-space-lg);
+        }
+        
+        .counter-display {
+            background: var(--ig-surface-elevated);
+            border: 1px solid var(--ig-border);
+            border-radius: var(--ig-radius-lg);
+            padding: var(--ig-space-lg);
+            margin-bottom: var(--ig-space-lg);
+            box-shadow: var(--ig-shadow-md);
+        }
+        
+        .count-number {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--ig-text-primary);
+        }
+        
+        .count-limit {
+            color: var(--ig-text-secondary);
+            font-size: 16px;
+            margin-left: var(--ig-space-xs);
+        }
+        
+        .caption-textarea {
+            width: 100%;
+            min-height: 320px;
+            padding: var(--ig-space-lg);
+            background: var(--ig-surface);
+            border: 2px solid var(--ig-border);
+            border-radius: var(--ig-radius-lg);
+            color: var(--ig-text-primary);
+            font-family: inherit;
+            font-size: 14px;
+            line-height: 1.6;
+            resize: vertical;
+            transition: var(--ig-transition);
+            box-sizing: border-box;
+        }
+        
+        .caption-textarea:focus {
+            outline: none;
+            border-color: var(--ig-blue);
+            box-shadow: 0 0 0 3px rgba(0, 149, 246, 0.1);
+        }
+        
+        .caption-textarea::placeholder {
+            color: var(--ig-text-muted);
+            font-style: italic;
+        }
+        
+        .analysis-card {
+            background: var(--ig-surface-elevated);
+            border: 1px solid var(--ig-border);
+            border-radius: var(--ig-radius-lg);
+            padding: var(--ig-space-lg);
+            margin-top: var(--ig-space-lg);
+            box-shadow: var(--ig-shadow-sm);
+        }
+        
+        .analysis-title {
+            color: var(--ig-blue);
+            margin-bottom: var(--ig-space-md);
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .stat-item {
+            margin-bottom: var(--ig-space-sm);
+            padding: var(--ig-space-sm);
+            background: var(--ig-surface);
+            border-radius: var(--ig-radius-sm);
+            border-left: 3px solid var(--ig-blue);
+        }
+        
+        .stat-label {
+            font-weight: 600;
+            color: var(--ig-text-primary);
+        }
+        
+        .stat-value {
+            color: var(--ig-text-secondary);
+            margin-left: var(--ig-space-xs);
+        }
+        
+        .tip-box {
+            padding: var(--ig-space-md);
+            margin-top: var(--ig-space-md);
+            border-radius: var(--ig-radius-md);
+            border-left: 4px solid;
+        }
+        
+        .tip-error {
+            background: rgba(237, 73, 86, 0.1);
+            border-left-color: var(--ig-red);
+            color: var(--ig-red);
+        }
+        
+        .tip-warning {
+            background: rgba(255, 205, 60, 0.1);
+            border-left-color: var(--ig-yellow);
+            color: var(--ig-yellow);
+        }
+        
+        .tip-info {
+            background: rgba(0, 149, 246, 0.1);
+            border-left-color: var(--ig-blue);
+            color: var(--ig-blue);
+        }
+        
+        .header-section {
+            text-align: center;
+            margin-bottom: var(--ig-space-2xl);
+        }
+        
+        .header-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: var(--ig-space-sm);
+            background: var(--ig-gradient-brand);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .header-subtitle {
+            color: var(--ig-text-secondary);
+            font-size: 16px;
+        }
+        
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--ig-space-xs);
+            color: var(--ig-text-secondary);
+            text-decoration: none;
+            margin-bottom: var(--ig-space-lg);
+            padding: var(--ig-space-sm) var(--ig-space-md);
+            border-radius: var(--ig-radius-sm);
+            transition: var(--ig-transition);
+        }
+        
+        .back-link:hover {
+            background: var(--ig-surface-hover);
+            color: var(--ig-text-primary);
+        }
+        
+        /* Progress bar for character count */
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: var(--ig-border);
+            border-radius: var(--ig-radius-full);
+            overflow: hidden;
+            margin-top: var(--ig-space-sm);
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: var(--ig-blue);
+            transition: all 0.3s ease;
+            border-radius: var(--ig-radius-full);
+        }
+        
+        .progress-fill.warning {
+            background: var(--ig-yellow);
+        }
+        
+        .progress-fill.danger {
+            background: var(--ig-red);
+        }
+    </style>
+</head>
+<body>
+    <div class="analyzer-container">
+        <!-- Back Navigation -->
+        <a href="index.html" class="back-link">
+            ← Back to Home
+        </a>
+        
+        <!-- Header -->
+        <div class="header-section">
+            <h1 class="header-title">📱 Instagram Caption Analyzer</h1>
+            <p class="header-subtitle">Optimize your captions for maximum engagement</p>
+        </div>
+        
+        <!-- Character Counter Display -->
+        <div class="ig-card counter-display">
+            <div class="ig-flex ig-justify-between ig-items-center ig-mb-sm">
+                <div>
+                    <span class="count-number" id="charCount">0</span>
+                    <span class="count-limit">/ 2,200 characters</span>
+                </div>
+                <div class="ig-status ig-status-success" id="status">✅ Within Limit</div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            </div>
+        </div>
+        
+        <!-- Caption Input -->
+        <div class="ig-card">
+            <textarea 
+                id="captionText" 
+                class="caption-textarea"
+                placeholder="✨ Paste your Instagram caption here and watch the magic happen...
+
+Try pasting:
+- Your template with variables like {{ $json.followers_count }}
+- A full caption with hashtags and emojis
+- Any text to get instant analysis!"
+                oninput="analyzeCaption()"
+            ></textarea>
+        </div>
+        
+        <!-- Analysis Results -->
+        <div class="ig-card analysis-card" id="analysis">
+            <h3 class="analysis-title">📊 Caption Analysis</h3>
+            <div id="analysisContent">
+                <div class="stat-item">
+                    <span class="stat-label">Status:</span>
+                    <span class="stat-value">Waiting for input...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function analyzeCaption() {
+            const text = document.getElementById('captionText').value;
+            const charCount = text.length;
+            const limit = 2200;
+            
+            // Update character count
+            document.getElementById('charCount').textContent = charCount;
+            
+            // Calculate progress percentage
+            const percentage = Math.min((charCount / limit) * 100, 100);
+            const progressBar = document.getElementById('progressBar');
+            progressBar.style.width = percentage + '%';
+            
+            // Update status with modern styling
+            const statusEl = document.getElementById('status');
+            if (charCount <= 1800) {
+                statusEl.textContent = '✅ Perfect Length';
+                statusEl.className = 'ig-status-modern success';
+                progressBar.className = 'progress-fill';
+            } else if (charCount <= 2200) {
+                statusEl.textContent = '⚠️ Close to Limit';
+                statusEl.className = 'ig-status-modern warning';
+                progressBar.className = 'progress-fill warning';
+            } else {
+                statusEl.textContent = '❌ Over Limit';
+                statusEl.className = 'ig-status-modern danger';
+                progressBar.className = 'progress-fill danger';
+            }
+            
+            // Count hashtags
+            const hashtags = text.match(/#\w+/g) || [];
+            const hashtagCount = hashtags.length;
+            
+            // Count emojis
+            const emojiCount = (text.match(/[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/gu) || []).length;
+            
+            // Count words and lines
+            const wordCount = text.trim() ? text.trim().split(/\s+/).length : 0;
+            const lineCount = text.split('\n').length;
+            
+            // Build analysis
+            let analysis = `
+                <div class="stat-item">
+                    <span class="stat-label">📝 Words:</span>
+                    <span class="stat-value">${wordCount}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">📄 Lines:</span>
+                    <span class="stat-value">${lineCount}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">#️⃣ Hashtags:</span>
+                    <span class="stat-value">${hashtagCount}</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">😀 Emojis:</span>
+                    <span class="stat-value">${emojiCount}</span>
+                </div>
+            `;
+            
+            // Add tips and warnings
+            if (charCount === 0) {
+                analysis += `
+                    <div class="tip-box tip-info">
+                        <strong>💡 Pro Tip:</strong> Start typing to see real-time analysis of your caption!
+                    </div>
+                `;
+            } else {
+                if (charCount > 2200) {
+                    const overBy = charCount - 2200;
+                    analysis += `
+                        <div class="tip-box tip-error">
+                            <strong>⚠️ Over Limit:</strong> Your caption is ${overBy} characters too long. Instagram will truncate it!
+                        </div>
+                    `;
+                }
+                
+                if (hashtagCount > 30) {
+                    analysis += `
+                        <div class="tip-box tip-warning">
+                            <strong>📊 Hashtag Overload:</strong> You have ${hashtagCount} hashtags. Instagram recommends 3-5 for optimal reach.
+                        </div>
+                    `;
+                } else if (hashtagCount > 10) {
+                    analysis += `
+                        <div class="tip-box tip-warning">
+                            <strong>💡 Hashtag Tip:</strong> Consider reducing to 3-5 hashtags for better engagement rates.
+                        </div>
+                    `;
+                }
+                
+                if (text.includes('{{') && text.includes('}}')) {
+                    analysis += `
+                        <div class="tip-box tip-info">
+                            <strong>🔧 Template Detected:</strong> Variables like {{ $json.followers_count }} will expand when processed, potentially adding more characters.
+                        </div>
+                    `;
+                }
+                
+                if (charCount > 0 && charCount <= 125) {
+                    analysis += `
+                        <div class="tip-box tip-info">
+                            <strong>📱 Mobile Friendly:</strong> Your caption shows fully on mobile without "more" button!
+                        </div>
+                    `;
+                }
+            }
+            
+            document.getElementById('analysisContent').innerHTML = analysis;
+        }
+        
+        // Initialize analysis
+        analyzeCaption();
+        
+        // Auto-expand textarea
+        const textarea = document.getElementById('captionText');
+        textarea.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.max(320, this.scrollHeight) + 'px';
+        });
+    </script>
+</body>
+</html>
