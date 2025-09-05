@@ -5,315 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portfolio - Web Development Projects</title>
     <link rel="stylesheet" href="styles.css">
-    <style>
-        /* Additional styles for portfolio landing page */
-        .hero-section {
-            text-align: center;
-            padding: var(--ig-space-2xl) 0;
-            background: linear-gradient(135deg, var(--ig-background) 0%, var(--ig-surface-elevated) 100%);
-            border-radius: var(--ig-radius-xl);
-            margin-bottom: var(--ig-space-2xl);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .hero-section::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(0, 149, 246, 0.1) 0%, transparent 50%);
-            animation: pulse 4s ease-in-out infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 0.5; }
-            50% { transform: scale(1.1); opacity: 0.8; }
-        }
-        
-        .hero-content {
-            position: relative;
-            z-index: 1;
-        }
-        
-        .hero-title {
-            font-size: clamp(28px, 6vw, 48px);
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: var(--ig-space-xs);
-            margin-bottom: var(--ig-space-md);
-            text-shadow: 0 0 30px rgba(0, 149, 246, 0.5);
-        }
-        
-        .hero-title .emoji {
-            background: none;
-            -webkit-text-fill-color: initial;
-            text-shadow: none;
-        }
-        
-        .hero-title .title-text {
-            background: var(--ig-gradient-brand);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        
-        .hero-subtitle {
-            font-size: clamp(16px, 3vw, 20px);
-            color: var(--ig-text-secondary);
-            margin-bottom: var(--ig-space-xl);
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: var(--ig-space-xl);
-            margin-bottom: var(--ig-space-2xl);
-        }
-        
-        .project-card {
-            background: var(--ig-surface-elevated);
-            border: 1px solid var(--ig-border);
-            border-radius: var(--ig-radius-lg);
-            padding: var(--ig-space-xl);
-            transition: var(--ig-transition-slow);
-            position: relative;
-            overflow: hidden;
-            box-shadow: var(--ig-shadow-md);
-        }
-        
-        .project-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0, 149, 246, 0.1), transparent);
-            transition: var(--ig-transition-slow);
-        }
-        
-        .project-card:hover::before {
-            left: 100%;
-        }
-        
-        .project-card:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--ig-shadow-xl);
-            border-color: var(--ig-blue);
-        }
-        
-        .project-icon {
-            font-size: 48px;
-            margin-bottom: var(--ig-space-md);
-            display: block;
-            filter: drop-shadow(0 0 10px rgba(0, 149, 246, 0.3));
-        }
-        
-        .project-title {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--ig-text-primary);
-            margin-bottom: var(--ig-space-sm);
-        }
-        
-        .project-description {
-            color: var(--ig-text-secondary);
-            line-height: 1.6;
-            margin-bottom: var(--ig-space-lg);
-        }
-        
-        .project-tech {
-            display: flex;
-            flex-wrap: wrap;
-            gap: var(--ig-space-xs);
-            margin-bottom: var(--ig-space-lg);
-        }
-        
-        .tech-tag {
-            background: var(--ig-surface-hover);
-            color: var(--ig-blue);
-            padding: var(--ig-space-xs) var(--ig-space-sm);
-            border-radius: var(--ig-radius-full);
-            font-size: 12px;
-            font-weight: 600;
-            border: 1px solid var(--ig-border-light);
-        }
-        
-        .project-buttons {
-            display: flex;
-            gap: var(--ig-space-sm);
-            flex-wrap: wrap;
-        }
-        
-        .btn-primary {
-            background: var(--ig-gradient-brand);
-            color: white;
-            padding: var(--ig-space-sm) var(--ig-space-lg);
-            border-radius: var(--ig-radius-sm);
-            text-decoration: none;
-            font-weight: 600;
-            transition: var(--ig-transition);
-            border: none;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            gap: var(--ig-space-xs);
-        }
-        
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--ig-shadow-lg);
-        }
-        
-        .btn-secondary {
-            background: transparent;
-            color: var(--ig-text-secondary);
-            padding: var(--ig-space-sm) var(--ig-space-lg);
-            border: 1px solid var(--ig-border-light);
-            border-radius: var(--ig-radius-sm);
-            text-decoration: none;
-            font-weight: 600;
-            transition: var(--ig-transition);
-            display: inline-flex;
-            align-items: center;
-            gap: var(--ig-space-xs);
-        }
-        
-        .btn-secondary:hover {
-            background: var(--ig-surface-hover);
-            color: var(--ig-text-primary);
-            border-color: var(--ig-blue);
-        }
-        
-        .stats-section {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: var(--ig-space-lg);
-            margin-bottom: var(--ig-space-2xl);
-        }
-        
-        .stat-card {
-            background: var(--ig-surface);
-            border: 1px solid var(--ig-border);
-            border-radius: var(--ig-radius-lg);
-            padding: var(--ig-space-lg);
-            text-align: center;
-            transition: var(--ig-transition);
-        }
-        
-        .stat-card:hover {
-            background: var(--ig-surface-elevated);
-            transform: translateY(-2px);
-        }
-        
-        .stat-number {
-            font-size: 32px;
-            font-weight: 700;
-            color: var(--ig-blue);
-            display: block;
-            margin-bottom: var(--ig-space-xs);
-        }
-        
-        .stat-label {
-            color: var(--ig-text-secondary);
-            font-size: 14px;
-        }
-        
-        .contact-section {
-            background: var(--ig-surface-elevated);
-            border: 1px solid var(--ig-border);
-            border-radius: var(--ig-radius-xl);
-            padding: var(--ig-space-2xl);
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .contact-section::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 200%;
-            height: 200%;
-            background: conic-gradient(from 0deg, transparent, rgba(0, 149, 246, 0.1), transparent);
-            animation: rotate 10s linear infinite;
-        }
-        
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        
-        .contact-content {
-            position: relative;
-            z-index: 1;
-        }
-        
-        .contact-title {
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--ig-text-primary);
-            margin-bottom: var(--ig-space-md);
-        }
-        
-        .contact-description {
-            color: var(--ig-text-secondary);
-            margin-bottom: var(--ig-space-xl);
-            font-size: 16px;
-        }
-        
-        .footer {
-            text-align: center;
-            padding: var(--ig-space-xl) 0;
-            color: var(--ig-text-muted);
-            border-top: 1px solid var(--ig-border);
-            margin-top: var(--ig-space-2xl);
-        }
-        
-        /* Responsive adjustments */
-        @media (max-width: 768px) {
-            .hero-section {
-                padding: var(--ig-space-xl) var(--ig-space-md);
-            }
-            
-            .projects-grid {
-                grid-template-columns: 1fr;
-                gap: var(--ig-space-lg);
-            }
-            
-            .project-buttons {
-                justify-content: center;
-            }
-            
-            .stats-section {
-                grid-template-columns: repeat(2, 1fr);
-                gap: var(--ig-space-md);
-            }
-            
-            .contact-section {
-                padding: var(--ig-space-xl) var(--ig-space-md);
-            }
-        }
-        
-        @media (max-width: 480px) {
-            .stats-section {
-                grid-template-columns: 1fr;
-            }
-            
-            .project-buttons {
-                flex-direction: column;
-            }
-        }
-    </style>
 </head>
 <body>
     <div class="ig-container">
@@ -355,15 +46,17 @@
 
         <!-- Projects Section -->
         <section id="projects" class="projects-section">
-            <h2 class="ig-text-center ig-mb-xl" style="font-size: 32px; font-weight: 700; color: var(--ig-text-primary);">
-                Featured Projects
+            <h2 class="ig-text-center ig-mb-xl" style="font-size: 32px; font-weight: 700;">
+                <span class="title-text">Featured Projects</span>
             </h2>
             
             <div class="projects-grid">
                 <!-- Instagram Caption Analyzer -->
                 <div class="project-card">
                     <span class="project-icon">📱</span>
-                    <h3 class="project-title">Instagram Caption Analyzer</h3>
+                    <h3 class="project-title">
+                        <span class="title-text">Instagram Caption Analyzer</span>
+                    </h3>
                     <p class="project-description">
                         Real-time caption optimization tool that analyzes character count, hashtags, and provides engagement tips based on 2024 Instagram best practices.
                     </p>
@@ -386,7 +79,9 @@
                 <!-- Placeholder for Second Project -->
                 <div class="project-card">
                     <span class="project-icon">⚡</span>
-                    <h3 class="project-title">Coming Soon</h3>
+                    <h3 class="project-title">
+                        <span class="title-text">Coming Soon</span>
+                    </h3>
                     <p class="project-description">
                         Next exciting project in development. Stay tuned for innovative web solutions and creative digital experiences.
                     </p>
@@ -408,7 +103,9 @@
                 <!-- Placeholder for Third Project -->
                 <div class="project-card">
                     <span class="project-icon">🎨</span>
-                    <h3 class="project-title">Portfolio Expansion</h3>
+                    <h3 class="project-title">
+                        <span class="title-text">Portfolio Expansion</span>
+                    </h3>
                     <p class="project-description">
                         More amazing projects coming soon! Each one designed to solve real problems and showcase cutting-edge development skills.
                     </p>
@@ -432,7 +129,9 @@
         <!-- Contact Section -->
         <section id="contact" class="contact-section">
             <div class="contact-content">
-                <h2 class="contact-title">Let's Build Something Amazing</h2>
+                <h2 class="contact-title">
+                    <span class="title-text">Let's Build Something Amazing</span>
+                </h2>
                 <p class="contact-description">
                     Ready to bring your ideas to life? Let's discuss your next project and create digital solutions that exceed expectations.
                 </p>
